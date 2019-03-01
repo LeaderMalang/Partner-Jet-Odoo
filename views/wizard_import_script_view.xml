@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+         <!-- Import -->
+	     <record id="wizard_import_script_form_view" model="ir.ui.view">
+	        <field name="name">wizard.import.script.form </field>
+	        <field name="model">wizard.import.script</field>
+	        <field name="arch" type="xml">
+	            <form>
+	                <group>
+	                    <field name="file" filename="name"/>
+	                </group>
+	                <footer>
+	                    <button name="import_product_category" string="Import Category" type="object" class="oe_highlight"/>
+	                    or
+	                    <button name="import_attribute" string="Attribute" type="object" class="oe_highlight"/>
+	                    or 
+	                    <button name="import_attribute_value" string="Attribute Value" type="object" class="oe_highlight"/>
+	                    or
+	                    <button name="map_category_attribute" string="Category Attribute Mapping" type="object" class="oe_highlight"/>
+	                    or
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+	                </footer>
+	            </form>
+	        </field>
+	    </record>
+
+        <record id="action_wizard_import" model="ir.actions.act_window">
+            <field name="name">Import</field>
+            <field name="res_model">wizard.import.script</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wizard_import"
+            id="menuitem_wizard_import_script"
+            parent="submenu_config" sequence="10"/>
+
+
+        <!-- Fetch jet order -->
+        <record id="wizard_fetch_jet_order_form_view" model="ir.ui.view">
+            <field name="name">fetch.jet.order.form </field>
+            <field name="model">fetch.jet.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <label string="* For fetch the jet order into odoo, click below button"/>
+                    <footer>
+                        <button name="fetch" string="Fetch" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_fetch_jet_order" model="ir.actions.act_window">
+            <field name="name">Fetch Order</field>
+            <field name="res_model">fetch.jet.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wizard_fetch_jet_order"
+            id="menuitem_fetch_jet_order"
+            parent="submenu_config" sequence="15"/>
+
+    </data>
+</odoo>

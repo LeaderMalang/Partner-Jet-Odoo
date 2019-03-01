@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="Jet" id="mainmenu_jet" />
+
+        <menuitem id="submenu_config" name="Configuration" parent="mainmenu_jet" sequence="1" />
+        
+        <record id="partner_jet_config_tree_view" model="ir.ui.view">
+            <field name="name">partner.jet.config.tree</field>
+            <field name="model">partner.jet.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="url"/>
+                    <field name="user"/>
+                    <field name="secret_key"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="partner_jet_config_form_view" model="ir.ui.view">
+            <field name="name">partner.jet.config.form</field>
+            <field name="model">partner.jet.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Confirm" name="do_connection" type="object" class="oe_highlight"/>
+                    </header>
+                        <group string="API Setting">
+                            <field name="url" required="1"/>
+                            <field name="user" required="1"/>
+                            <field name="secret_key" required="1"/>
+                            <field name="merchant" required="1"/>
+                            <field name="fulfillment_node_id" required="1"/>
+                            <field name="location_id" required="1" domain="[('usage','=','internal')]"/>
+                            <field name="id_token" invisible="1"/>
+                            <field name="token_type" invisible="1"/>
+                            <field name="expires_on" invisible="1"/>
+                        </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_jet_config" model="ir.actions.act_window">
+            <field name="name">Configuration</field>
+            <field name="res_model">partner.jet.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menuitem_jet_config_view" name="Configuration"
+                  parent="submenu_config" action="action_partner_jet_config" sequence="5"/>
+
+    </data>
+
+    <data>
+
+        <record id="partner_jet_connection_cron" model="ir.cron">
+            <field name="name">Scheduler: Partnet Jet Connection</field>
+            <field name="model_id" ref="model_partner_jet_config"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_do_connection()</field>
+            <field name="interval_number">7</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="priority" eval="1"/>
+        </record>
+    </data>
+
+
+</odoo>

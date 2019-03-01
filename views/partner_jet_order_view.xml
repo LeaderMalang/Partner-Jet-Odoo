@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="partner_jet_order_tree_view" model="ir.ui.view">
+            <field name="name">partner.jet.order.tree</field>
+            <field name="model">partner.jet.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="merchant_order_id" />
+                    <field name="status" />
+                    <field name="order_placed_date" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="partner_jet_order_form_view" model="ir.ui.view">
+            <field name="name">partner.jet.order.form</field>
+            <field name="model">partner.jet.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="alt_order_id" required="1" />
+                                <field name="status" required="1" />
+                                <field name="merchant_order_id" required="1" />
+                                <field name="reference_order_id" required="1" />
+                                <field name="has_shipments" required="1" />
+                                <field name="hash_email" required="1" />
+                            </group>
+                            <group>
+                                <field name="jet_request_directed_cancel" required="1" />
+                                <field name="order_placed_date"/>
+                                <field name="fulfillment_node"/>
+                                <field name="customer_reference_order_id" />
+                                <field name="order_transmission_date" />
+                           </group>
+                       </group>
+                        <notebook>
+                            <page string="Order Line">
+                                <field name="partner_jet_lines">
+                                    <tree editable="bottom">
+                                        <field name="merchant_sku"/>
+                                        <field name="item_tax_code"/>
+                                        <field name="order_item_id"/>
+                                        <field name="product_title"/>
+                                        <field name="order_cancel_qty"/>
+                                        <field name="url"/>
+                                        <field name="request_order_quantity"/>
+                                        <field name="jet_order_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="item_shipping_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="item_shipping_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="item_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="base_price"/>
+                                    </div>
+                                    <field name="base_price" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_jet_order" model="ir.actions.act_window">
+            <field name="name">Order</field>
+            <field name="res_model">partner.jet.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--         <menuitem id="menuitem_jet_order" name="Jet Order" -->
+<!--             parent="submenu_jet" action="action_partner_jet_order" -->
+<!--             sequence="8" /> -->
+
+
+        <record id="jet_inherit_view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//notebook" position="inside">
+                    <page string="Jet Order Details" attrs="{'invisible': [('is_jet_order', '=', False)]}">
+                        <group>
+                            <group>
+                                <field name="alt_order_id" readonly="1" />
+                                <field name="status" readonly="1" />
+                                <field name="merchant_order_id" readonly="1" />
+                                <field name="reference_order_id" readonly="1" />
+                                <field name="has_shipments" readonly="1" />
+                                <field name="hash_email" readonly="1" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="jet_request_directed_cancel" readonly="1"  invisible="1"/>
+                                <field name="order_placed_date" readonly="1"/>
+                                <field name="fulfillment_node" readonly="1" invisible="1"/>
+                                <field name="customer_reference_order_id" readonly="1"/>
+                                <field name="order_transmission_date" readonly="1"/>
+                                <field name="acknowledgement_status"/>
+                                <field name="is_jet_order" readonly="1" invisible="1"/>
+                           </group>
+                       </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree" position="inside">
+                    <field name="url" invisible="1"/>
+                    <field name="order_item_id" invisible="1"/>
+                    <field name="item_tax_code" invisible="1"/>
+                    <field name="order_item_acknowledgement_status"/>
+                </xpath>
+            </field>
+        </record> 
+
+        <record id="jet_action_quotations_sale_order_view" model="ir.actions.act_window">
+            <field name="name">Jet Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+            <field name="context">{'default_team_id': context.get('active_id'),'show_address': 1,
+            'default_is_jet_order':1}
+            </field>
+            <field name="domain">[('is_jet_order', '=', True)]</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        </record>
+
+        <menuitem id="menuitem_jet_sale_order"
+            parent="submenu_jet" action="jet_action_quotations_sale_order_view"
+            sequence="8" />
+
+    </data>
+</odoo>

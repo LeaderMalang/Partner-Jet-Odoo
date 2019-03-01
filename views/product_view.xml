@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    	<record id="inherit_product_normal_form_view" model="ir.ui.view">
+			<field name="name">product.product.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view"/>
+			<field name="arch" type="xml">
+				<button name="toggle_active" position="before">
+	                <button class="oe_stat_button" name="do_product_upload" 
+	                		type="object" icon="fa-file" string="Upload product" attrs="{'invisible':['|',('jet_status','=','Uploaded'),('type','!=','product')]}">
+	                </button>
+	                <button class="oe_stat_button" name="do_product_sync_price" 
+	                		type="object" icon="fa-money" string="Sync Price" attrs="{'invisible':[('jet_status','!=','Uploaded')]}">
+	                </button>
+	                <button class="oe_stat_button" name="do_product_sync_inventory" 
+	                		type="object" icon="fa-building-o" string="Sync Inventory" attrs="{'invisible':[('jet_status','=','Not Uploaded')]}">
+	                </button>
+            	</button>
+                <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name="domain">[('is_jet_categ','=',True)]</attribute>
+                </xpath>
+                <field name="categ_id" position="after">
+                    <field name="jet_attribute_ids" widget="many2many_tags" context="{'categ_id':categ_id}"/>
+                </field>
+                <field name="attribute_value_ids" position="attributes">
+<!--                     <attribute name="context">{'jet_attribute_ids':jet_attribute_ids}</attribute> -->
+                    <attribute name="domain">[('attribute_id', 'in', jet_attribute_ids)]</attribute>
+                </field>
+            	<field name="barcode" position="replace"/>
+            	<xpath expr="//notebook" position="inside">
+            		<page string="Jet">
+            			<group col="4">
+            				<field name="jet_status" readonly="1"/>
+<!--             				<field name="jet_category_id"/> -->
+            				<field name="product_barcode_type" required="1"/>
+            				<field name="barcode" required="0"/>
+            				<field name="product_jet_sku_id" readonly="1"/>
+                            <field name="brand"/>
+                            <field name="manufacturer"/>
+                            <field name="product_tax_code"/>
+                            <field name="mfr_part_number"/>
+                        </group>
+                        <group>
+                            <field name="product_description"/>
+                        </group>
+                        <group col="4" string="Logistics Value">
+                            <field name="map_price"/>
+                            <field name="map_implementation"/>
+                            <field name="shipping_weight_pounds"/>
+                            <field name="package_length_inches"/>
+                            <field name="package_width_inches"/>
+                            <field name="package_height_inches"/>
+                            <field name="display_length_inches"/>
+                            <field name="display_width_inches"/>
+                            <field name="display_height_inches"/>
+                        </group>
+                        <group col="4" string="Additional">
+                            <field name="prop_65"/>
+                            <field name="legal_disclaimer_description"/>
+                            <field name="country_of_origin"/>
+                            <field name="safety_warning"/>
+            			</group>
+            		</page>
+            	</xpath>
+			</field>
+    	</record>
+
+        <!-- Product Category -->
+        <record id="inherit_product_categ_normal_form_view" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="jet_categ_id"/>
+                    <field name="categ_level"/>
+                    <field name="is_jet_categ" invisible="1"/>
+                    <field name="attribute_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="inherit_product_attribute_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="inherit_id" ref="product.attribute_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="jet_attribute_id"/>
+                    <field name="description"/>
+                    <field name="free_text"/>
+                    <field name="facet_filter"/>
+                    <field name="is_jet_attribute" invisible="1"/>
+                    <field name="category_ids" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="inherit_product_variants_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.value.form</field>
+            <field name="model">product.attribute.value</field>
+            <field name="inherit_id" ref="product.variants_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="units"/>
+                    <field name="is_jet_value" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
