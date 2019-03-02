@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Partner Jet Odoo Connector',
+    'name': 'PartnerJet Odoo',
     'version': '1.0',
     'category': 'Other',
-    'description': u"""
+    'description': u"""Odoo Connector for Partner Jet.
 """,
     'author': 'YourCompany',
     'depends': ['base', 'sale_management', 'stock', 'delivery'],
